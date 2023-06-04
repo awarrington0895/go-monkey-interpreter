@@ -106,6 +106,42 @@ func TestString(t *testing.T) {
 	}
 }
 
+func TestIdentifierExpression(test *testing.T) {
+	input := "foobar;"
+
+	lexr := lexer.New(input)
+	parser := New(lexr)
+	program := parser.ParseProgram()
+	checkParserErrors(test, parser)
+
+	if len(program.Statements) != 1 {
+		test.Fatalf("program has not enough statements. got=%d", len(program.Statements))
+	}
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+
+	if !ok {
+		test.Fatalf(
+			"programs.Statements[0] is not an *ast.Expression. got=%T",
+			program.Statements[0],
+		)
+	}
+
+	ident, ok := stmt.Expression.(*ast.Identifier)
+
+	if !ok {
+		test.Fatalf("exp not *ast.Identifier. got=%T", ident.Value)
+	}
+
+	if ident.Value != "foobar" {
+		test.Errorf("ident.Value not %s. got=%s", "foobar", ident.Value)
+	}
+
+	if ident.TokenLiteral() != "foobar" {
+		test.Errorf("ident.TokenLiteral() not %s. got=%s", "foobar", ident.TokenLiteral())
+	}
+}
+
 func checkParserErrors(test *testing.T, parser *Parser) {
 	errors := parser.Errors()
 
