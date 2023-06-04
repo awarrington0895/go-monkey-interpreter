@@ -23,6 +23,8 @@ const (
 	GT       = ">"
 	ASSIGN   = "="
 	PLUS     = "+"
+	EQ       = "=="
+	NOT_EQ   = "!="
 	// Delimiters
 	COMMA     = ","
 	SEMICOLON = ";"
